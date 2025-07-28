@@ -25,7 +25,7 @@ class Address extends BaseModel
      *
      * @return mixed API response.
      */
-    public function getCities($data)
+    public function getCities($data=[])
     {
         $fields = [
             "Ref" => "nullable",

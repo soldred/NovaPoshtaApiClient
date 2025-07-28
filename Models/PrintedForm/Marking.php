@@ -2,8 +2,6 @@
 
 namespace NovaPoshta\Models\PrintedForm;
 
-require_once __DIR__ . "/BasePrintedForm.php";
-
 class Marking extends BasePrintedForm
 {
     public function __construct($apiKey)
@@ -13,6 +11,9 @@ class Marking extends BasePrintedForm
 
     /**
      * Generate URL to print marking documents.
+     *
+     * API Reference:
+     * https://developers.novaposhta.ua/view/model/a3fe2fdd-8512-11ec-8ced-005056b2dbe1/method/a40fb782-8512-11ec-8ced-005056b2dbe1
      *
      * @param string|array $refs Single ref or array of refs (UUID or EN numbers).
      * @param string $size Size of the marking, e.g. '85x85' or '100x100'. Default '85x85'.

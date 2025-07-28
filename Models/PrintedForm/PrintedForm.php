@@ -1,6 +1,7 @@
 <?php
 namespace NovaPoshta\Models\PrintedForm;
 
+require_once __DIR__ . "/BasePrintedForm.php";
 require_once __DIR__ . '/InternetDocument.php';
 require_once __DIR__ . '/Marking.php';
 require_once __DIR__ . '/Registers.php';

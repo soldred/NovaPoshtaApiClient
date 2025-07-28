@@ -2,8 +2,6 @@
 
 namespace NovaPoshta\Models\PrintedForm;
 
-require_once __DIR__ . "/BasePrintedForm.php";
-
 class InternetDocument extends BasePrintedForm
 {
     public function __construct($apiKey)
@@ -13,6 +11,9 @@ class InternetDocument extends BasePrintedForm
 
     /**
      * Generate URL to print InternetDocument (waybill/ЕН).
+     *
+     * API Reference:
+     * https://developers.novaposhta.ua/view/model/a3fe2fdd-8512-11ec-8ced-005056b2dbe1/method/a4583ee4-8512-11ec-8ced-005056b2dbe1
      *
      * @param string|array $refs Single ref or array of refs (UUID or EN numbers).
      * @param string $format Format type: self::FORMAT_PDF, self::FORMAT_PDF8 or self::FORMAT_HTML

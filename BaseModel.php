@@ -67,17 +67,14 @@ abstract class BaseModel {
      */
     protected function validateFields($fields, $data) {
         $missingFields = [];
-        $validFields = [];
+        $validFields = new \StdClass();
 
-        if (empty($data)) {
-            return new \StdClass();
-        }
 
         foreach ($fields as $field => $rule) {
             if ($rule === "required" && (empty($data[$field]) && $data[$field] !== '0')) {
                 $missingFields[] = $field;
             } elseif (isset($data[$field]) && $data[$field] !== '') {
-                $validFields[$field] = (string)$data[$field];
+                $validFields->$field = (string)$data[$field];
             }
         }
 
