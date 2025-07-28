@@ -57,8 +57,6 @@ $result = $np->Address->getCities([
 //$result = $np->Common->getMessageCodeText();
 //$result = $np->Common->getPalletsList();
 
-//$apiKey = "77e64b966c06a529d364b82017c8db76";
-//$np = new NovaPoshtaClient($apiKey);
 //
 //$result = $np->InternetDocument->getDocumentList([
 //    "DateTimeFrom" => "20.07.2025",
