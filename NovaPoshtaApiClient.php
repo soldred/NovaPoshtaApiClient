@@ -9,6 +9,7 @@ require_once __DIR__ . '/Models/Counterparty.php';
 require_once __DIR__ . '/Models/Courier.php';
 require_once __DIR__ . '/Models/InternetDocument.php';
 require_once __DIR__ . '/Models/Tracking.php';
+require_once __DIR__ . '/Models/PrintedForm/PrintedForm.php';
 
 use NovaPoshta\Models\Address;
 use NovaPoshta\Models\Common;
@@ -16,6 +17,7 @@ use NovaPoshta\Models\ContactPerson;
 use NovaPoshta\Models\Counterparty;
 use NovaPoshta\Models\Courier;
 use NovaPoshta\Models\InternetDocument;
+use NovaPoshta\Models\PrintedForm\PrintedForm;
 use NovaPoshta\Models\Tracking;
 
 /**
@@ -38,6 +40,7 @@ class NovaPoshtaClient {
     public $Courier;
     public $InternetDocument;
     public $Tracking;
+    public $PrintedForm;
 
     public function __construct($apiKey) {
         $this->apiKey = $apiKey;
@@ -49,6 +52,7 @@ class NovaPoshtaClient {
         $this->Courier = new Courier($apiKey, $this->apiUrl);
         $this->InternetDocument = new InternetDocument($apiKey, $this->apiUrl);
         $this->Tracking = new Tracking($apiKey, $this->apiUrl);
+        $this->PrintedForm = new PrintedForm($apiKey);
 
     }
 }
