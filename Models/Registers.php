@@ -45,6 +45,10 @@ class Registers extends BaseModel
             "Date" => "required",
         ]);
 
+        if(!is_array($data['DocumentRefs'])){
+            throw new \InvalidArgumentException('$data["DocumentRefs"] must be an array');
+        }
+
         $methodProperties = $this->validateFields($fields, $data);
 
         return $this->sendRequest("ScanSheetGeneral", "insertDocuments", $methodProperties);
@@ -78,8 +82,20 @@ class Registers extends BaseModel
      * @return mixed API response
      */
     public function getRegister($ref, $counterpartyRef){
-        if(empty($ref) || empty($counterpartyRef)){
-            throw new \InvalidArgumentException('Missing required parameter: $ref or $counterpartyRef.');
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
+
+        if(empty($counterpartyRef)){
+            throw new \InvalidArgumentException('Missing required parameter: $counterpartyRef');
+        }
+
+        if(!is_string($counterpartyRef)){
+            throw new \InvalidArgumentException('$counterpartyRef must be a string.');
         }
 
         return $this->sendRequest("ScanSheetGeneral", "getScanSheet", ["Ref" => $ref, "CounterpartyRef" => $counterpartyRef]);
@@ -98,15 +114,15 @@ class Registers extends BaseModel
      * @return mixed API response.
      */
     public function deleteRegister($scanSheetRefs){
-        if(empty($ScanSheetRefs)){
+        if(empty($scanSheetRefs)){
             throw new \InvalidArgumentException('Missing required parameter: $scanSheetRefs.');
         }
 
-        if(!is_array($ScanSheetRefs)){
+        if(!is_array($scanSheetRefs)){
             throw new \InvalidArgumentException('$scanSheetRefs must be an array.');
         }
 
-        return $this->sendRequest("ScanSheetGeneral", "deleteScanSheet", ["$scanSheetRefs" => $ScanSheetRefs]);
+        return $this->sendRequest("ScanSheetGeneral", "deleteScanSheet", ["ScanSheetRefs" => $scanSheetRefs]);
     }
 
     /**
@@ -121,12 +137,20 @@ class Registers extends BaseModel
      * @return mixed API response.
      */
     public function removeDocuments($documentRefs, $ref){
-        if(empty($ref) || empty($documentRefs)){
-            throw new \InvalidArgumentException('Missing required parameter: $ref or $documentRefs.');
+        if(empty($documentRefs)){
+            throw new \InvalidArgumentException('Missing required parameter: $documentRefs.');
         }
 
         if(!is_array($documentRefs)){
-            throw new \InvalidArgumentException('$scanSheetRefs must be an array.');
+            throw new \InvalidArgumentException('$documentRefs must be an array.');
+        }
+
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
         }
 
         return $this->sendRequest("ScanSheetGeneral", "removeDocuments", ["DocumentRefs" => $documentRefs, "Ref" => $ref]);

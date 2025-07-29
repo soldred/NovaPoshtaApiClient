@@ -76,6 +76,14 @@ class ContactPerson extends BaseModel
      * @return mixed API response.
      */
     public function deleteContactPerson($ref){
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref.');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
+
         return $this->sendRequest("ContactPerson", "delete", array("Ref" => $ref));
     }
 }

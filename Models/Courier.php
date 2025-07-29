@@ -35,10 +35,23 @@ class Courier extends BaseModel
      * @return mixed API response.
      */
     public function insertDocuments($linkedDocuments, $number){
-        $methodProperties['LinkedDocuments'] = $linkedDocuments;
-        $methodProperties['Number'] = $number;
+        if(empty($linkedDocuments)){
+            throw new \InvalidArgumentException('Missing required parameter: $linkedDocuments');
+        }
 
-        return $this->sendRequest("CarCallGeneral", "insertDocuments", $methodProperties);
+        if(!is_array($linkedDocuments)){
+            throw new \InvalidArgumentException('$linkedDocuments must be an array of strings.');
+        }
+
+        if(empty($number)){
+            throw new \InvalidArgumentException('Missing required parameter: $number');
+        }
+
+        if(!is_string($number)){
+            throw new \InvalidArgumentException('$number must be a string.');
+        }
+
+        return $this->sendRequest("CarCallGeneral", "insertDocuments", ["LinkedDocuments" => $linkedDocuments, "Number" => $number]);
     }
 
     /**
@@ -52,6 +65,14 @@ class Courier extends BaseModel
      * @return mixed API response.
      */
     public function getAvailableOrdersList($number){
+        if(empty($number)){
+            throw new \InvalidArgumentException('Missing required parameter: $number');
+        }
+
+        if(!is_string($number)){
+            throw new \InvalidArgumentException('$number must be a string.');
+        }
+
         return $this->sendRequest("CarCallGeneral", "getAvailableOrdersList", ["Number" => $number]);
     }
 
@@ -71,6 +92,14 @@ class Courier extends BaseModel
      * @return mixed
      */
     public function deleteCourierCall($ref){
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
+
         return $this->sendRequest("CarCallGeneral", "deleteCourierCall", ["Ref" => $ref]);
     }
 
@@ -120,6 +149,14 @@ class Courier extends BaseModel
      * @return mixed API Response.
      */
     public function removeDocuments($linkedDocuments){
+        if(empty($linkedDocuments)){
+            throw new \InvalidArgumentException('Missing required parameter: $linkedDocuments');
+        }
+
+        if(!is_array($linkedDocuments)){
+            throw new \InvalidArgumentException('$linkedDocuments must be an array.');
+        }
+
         return $this->sendRequest("CarCallGeneral", "removeDocuments", ["Documents" => $linkedDocuments]);
     }
 

@@ -19,7 +19,7 @@ class Common extends BaseModel
      * https://developers.novaposhta.ua/view/model/a55b2c64-8512-11ec-8ced-005056b2dbe1/method/a56d5c1c-8512-11ec-8ced-005056b2dbe1
      *
      * @param array<string, string> $data Required:
-     * - RecipientCityRef — Recipient city identifier (UUID).
+     * - RecipientCityRef — Recipient city identifier (REF).
      * Optional:
      * - DateTime — Date for available intervals (format: dd.mm.YYYY). Defaults to current date.
      *
@@ -190,12 +190,28 @@ class Common extends BaseModel
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a55b2c64-8512-11ec-8ced-005056b2dbe1/method/c4389a2c-eaaf-11ef-84e0-48df37b921da
      *
-     * @param string $senderCityRef Sender city identifier (UUID).
+     * @param string $senderCityRef Sender city identifier (REF).
      * @param string $dateTime Date in format dd.mm.YYYY.
      *
      * @return mixed API response.
      */
     public function getPickupTimeIntervals($senderCityRef, $dateTime) {
+        if(empty($senderCityRef)){
+            throw new \InvalidArgumentException('Missing required parameter: $senderCityRef.');
+        }
+
+        if(!is_string($senderCityRef)){
+            throw new \InvalidArgumentException('$scanSheetRefs must be a string.');
+        }
+
+        if(empty($dateTime)){
+            throw new \InvalidArgumentException('Missing required parameter: $dateTime.');
+        }
+
+        if(!is_string($dateTime)){
+            throw new \InvalidArgumentException('$scanSheetRefs must be a string. Format should be dd.mm.YYYY');
+        }
+
         return $this->sendRequest("Common", "getPickupTimeIntervals", [
             "SenderCityRef" => $senderCityRef,
             "DateTime" => $dateTime,

@@ -18,14 +18,14 @@ class Address extends BaseModel
      * https://developers.novaposhta.ua/view/model/a0cf0f5f-8512-11ec-8ced-005056b2dbe1/method/a1e6f0a7-8512-11ec-8ced-005056b2dbe1
      *
      * @param array<string, string> $data Optional parameters:
-     * - Ref — City identifier (UUID).
+     * - Ref — City identifier (REF).
      * - Page — Page number.
      * - FindByString — Search by city name.
      * - Limit — Number of results per page.
      *
      * @return mixed API response.
      */
-    public function getCities($data=[])
+    public function getCities($data = [])
     {
         $fields = [
             "Ref" => "nullable",
@@ -34,7 +34,7 @@ class Address extends BaseModel
             "Limit" => "nullable",
         ];
 
-        $methodProperties = $this->validateFields($fields, $data, "getCities");
+        $methodProperties = $this->validateFields($fields, $data);
 
         return $this->sendRequest("Address", "getCities", $methodProperties);
     }
@@ -61,16 +61,16 @@ class Address extends BaseModel
      * @param array<string, string> $data Optional parameters:
      * - FindByString — Search by warehouse name.
      * - CityName — Search by city name.
-     * - CityRef — City identifier (UUID).
+     * - CityRef — City identifier (REF).
      * - Page — Page number.
      * - Limit — Number of results per page.
      * - Language — 'ua' or 'ru'. Default is 'ua'.
-     * - TypeOfWarehouseRef — Warehouse type identifier (UUID).
+     * - TypeOfWarehouseRef — Warehouse type identifier (REF).
      * - WarehouseId — Exact warehouse ID.
      *
      * @return mixed API response.
      */
-    public function getWarehouses($data)
+    public function getWarehouses($data = [])
     {
         $fields = [
             "FindByString" => "nullable",
@@ -94,22 +94,31 @@ class Address extends BaseModel
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a0cf0f5f-8512-11ec-8ced-005056b2dbe1/method/a27c20d7-8512-11ec-8ced-005056b2dbe1
      *
-     * @param array<string, string> $data Required:
-     * - CityRef — City identifier (UUID).
-     * - FindByString — Street name search string.
+     * @param string $cityRef City identifier (REF).
+     * @param string $findByString Street name search string.
      *
      * @return mixed API response.
      */
-    public function getStreet($data)
+    public function getStreet($cityRef, $findByString)
     {
-        $fields = [
-            "CityRef" => "required",
-            "FindByString" => "required",
-        ];
+        if(empty($cityRef)){
+            throw new \InvalidArgumentException('Missing required parameter: $cityRef');
+        }
 
-        $methodProperties = $this->validateFields($fields, $data);
+        if(!is_string($cityRef)){
+            throw new \InvalidArgumentException('$cityRef must be a string.');
+        }
 
-        return $this->sendRequest("Address", "getStreet", $methodProperties);
+
+        if(empty($findByString)){
+            throw new \InvalidArgumentException('Missing required parameter: $findByString');
+        }
+
+        if(!is_string($findByString)){
+            throw new \InvalidArgumentException('$findByString must be a string.');
+        }
+
+        return $this->sendRequest("Address", "getStreet", ["CityRef" => $cityRef, "FindByString" => $findByString]);
     }
 
     /**
@@ -119,8 +128,8 @@ class Address extends BaseModel
      * https://developers.novaposhta.ua/view/model/a0cf0f5f-8512-11ec-8ced-005056b2dbe1/method/a155d0d9-8512-11ec-8ced-005056b2dbe1
      *
      * @param array<string, string> $data Required:
-     * - CounterpartyRef — Counterparty identifier (UUID).
-     * - StreetRef — Street identifier (UUID).
+     * - CounterpartyRef — Counterparty identifier (REF).
+     * - StreetRef — Street identifier (REF).
      * - BuildingNumber — Building number.
      * - FlatNumber — Flat/apartment number.
      * Optional:
@@ -128,7 +137,7 @@ class Address extends BaseModel
      *
      * @return mixed API response.
      */
-    public function createCounterpartyAddress($data)
+    public function createCounterpartyAddress($data = [])
     {
         $fields = [
             "CounterpartyRef" => "required",
@@ -149,11 +158,19 @@ class Address extends BaseModel
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a0cf0f5f-8512-11ec-8ced-005056b2dbe1/method/a177069a-8512-11ec-8ced-005056b2dbe1
      *
-     * @param string $ref Address identifier (UUID) to delete.
+     * @param string $ref Address identifier (REF) to delete.
      * @return mixed API response.
      */
     public function deleteCounterpartyAddress($ref)
     {
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string');
+        }
+
         return $this->sendRequest("Address", "delete", ["Ref" => $ref]);
     }
 
@@ -166,8 +183,8 @@ class Address extends BaseModel
      * @param array<string, string> $data Required:
      * - Ref — Address reference to update.
      * Optional:
-     * - CounterpartyRef — Updated counterparty identifier (UUID).
-     * - StreetRef — Updated street identifier (UUID).
+     * - CounterpartyRef — Updated counterparty identifier (REF).
+     * - StreetRef — Updated street identifier (REF).
      * - BuildingNumber — Updated building number.
      * - Flat — Updated flat/apartment number.
      * - Note — Updated note.

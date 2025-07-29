@@ -123,11 +123,19 @@ class Counterparty extends BaseModel {
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a28f4b04-8512-11ec-8ced-005056b2dbe1/method/a332efbf-8512-11ec-8ced-005056b2dbe1
      *
-     * @param string $ref Counterparty identifier (UUID).
+     * @param string $ref Counterparty identifier (REF).
      *
      * @return mixed Api response.
      */
     public function getCounterpartyOptions($ref){
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
+
         return $this->sendRequest("Counterparty", "getCounterpartyOptions", ["Ref" => $ref]);
     }
 
@@ -137,24 +145,33 @@ class Counterparty extends BaseModel {
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a28f4b04-8512-11ec-8ced-005056b2dbe1/method/a30dbb7c-8512-11ec-8ced-005056b2dbe1
      *
-     * @param array<string, string> $data Required:
-     * - Ref — Counterparty identifier (UUID)
-     * - CounterpartyProperty — One of:
+     * @param string $ref Counterparty identifier (REF)
+     * @param string $counterpartyProperty CounterpartyProperty — One of:
      * - self::PROPERTY_SENDER
      * - self::PROPERTY_RECIPIENT
      * - self::PROPERTY_THIRD_PERSON
      *
      * @return mixed API response.
      */
-    public function getCounterpartyAddresses($data){
-        $fields = array(
-            "Ref" => "required",
-            "CounterpartyProperty" => "required",
-        );
+    public function getCounterpartyAddresses($ref, $counterpartyProperty){
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref.');
+        }
 
-        $methodProperties = $this->validateFields($fields, $data);
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
 
-        return $this->sendRequest("Counterparty", "getCounterpartyAddresses", $methodProperties);
+        if(empty($counterpartyProperty)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref. Use self::PROPERTY_ constants');
+        }
+
+        if(!is_string($counterpartyProperty)){
+            throw new \InvalidArgumentException('$ref must be a string. Use self::PROPERTY_ constants');
+        }
+
+
+        return $this->sendRequest("Counterparty", "getCounterpartyAddresses", ["Ref" => $ref, "CounterpartyProperty" => $counterpartyProperty]);
     }
 
     /**
@@ -164,8 +181,8 @@ class Counterparty extends BaseModel {
      * https://developers.novaposhta.ua/view/model/a28f4b04-8512-11ec-8ced-005056b2dbe1/method/a2c3c708-8512-11ec-8ced-005056b2dbe1
      *
      * @param array<string, string> $data Required:
-     * - Ref — Contact person counterparty identifier (UUID).
-     * - CityRef — City identifier (UUID).
+     * - Ref — Contact person counterparty identifier (REF).
+     * - CityRef — City identifier (REF).
      * - FirstName — First name.
      * - MiddleName — Middle name.
      * - LastName — Last name.
@@ -205,10 +222,18 @@ class Counterparty extends BaseModel {
      * API reference:
      * https://developers.novaposhta.ua/view/model/a28f4b04-8512-11ec-8ced-005056b2dbe1/method/a2eb27e8-8512-11ec-8ced-005056b2dbe1
      *
-     * @param string $ref Counterparty identifier (UUID).
+     * @param string $ref Counterparty identifier (REF).
      * @return mixed API Response.
      */
     public function deleteCounterparty($ref) {
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
+
         return $this->sendRequest("Counterparty", "delete", ["Ref" => $ref]);
     }
 
@@ -218,10 +243,18 @@ class Counterparty extends BaseModel {
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a28f4b04-8512-11ec-8ced-005056b2dbe1/method/a3575a67-8512-11ec-8ced-005056b2dbe1
      *
-     * @param string $ref Counterparty identifier (UUID)
+     * @param string $ref Counterparty identifier (REF)
      * @return mixed API response.
      */
     public function getCounterpartyContactPersons($ref) {
+        if(empty($ref)){
+            throw new \InvalidArgumentException('Missing required parameter: $ref');
+        }
+
+        if(!is_string($ref)){
+            throw new \InvalidArgumentException('$ref must be a string.');
+        }
+
         return $this->sendRequest("Counterparty", "getCounterpartyContactPersons", ["Ref" => $ref]);
     }
 
