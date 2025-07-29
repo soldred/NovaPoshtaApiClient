@@ -78,7 +78,7 @@ abstract class BaseModel {
             if ($rule === "required" && (empty($data[$field]) && $data[$field] !== '0')) {
                 $missingFields[] = $field;
             } elseif (isset($data[$field]) && $data[$field] !== '') {
-                $validFields[$field] = (string)$data[$field];
+                $validFields[$field] = $data[$field];
             }
         }
 

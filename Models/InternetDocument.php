@@ -58,6 +58,49 @@ class InternetDocument extends BaseModel
         return $this->sendRequest("InternetDocument", "getDocumentPrice", $methodProperties);
     }
 
+    public function createEW($data = [])
+    {
+        $fields = [
+            "PayerType" => "required", // Sender або Recipient
+            "PaymentMethod" => "required", // Cash або NonCash
+            "CargoType" => "required", // Documents / Parcel / Cargo
+            "ServiceType" => "required", // WarehouseWarehouse / WarehousePostomat
+            "SeatsAmount" => "required",
+            "Description" => "required",
+            "Cost" => "required",
+            "CitySender" => "required",
+            "Sender" => "required",
+            "ContactSender" => "required",
+            "SendersPhone" => "required",
+            "SenderAddress" => "required",
+            "CityRecipient" => "required",
+            "Recipient" => "required",
+            "ContactRecipient" => "required",
+            "RecipientsPhone" => "required",
+            "RecipientWarehouseIndex" => "nullable", // можна не вказувати взагалі, SiteKey
+            "RecipientAddress" => "nullable", // для адресної доставки
+            "Weight" => "nullable", // не обов’язкове, але бажано
+            "BackwardDeliveryAmount" => "nullable", // сума зворотної доставки
+            "BackwardDeliveryPayerType" => "nullable", // Sender / Recipient
+            "OptionsSeat" => "nullable",
+            "BackwardDeliveryData" => "nullable",
+        ];
+
+        $props = $this->validateFields($fields, $data);
+
+        // Зворотна доставка грошей
+        if (!empty($data['BackwardDeliveryAmount'])) {
+            $props['BackwardDeliveryData'] = [[
+                'PayerType' => isset($data['BackwardDeliveryPayerType']) ? $data['BackwardDeliveryPayerType'] : 'Recipient',
+                'CargoType' => 'Money',
+                'RedeliveryString' => (string)$data['BackwardDeliveryAmount'],
+            ]];
+        }
+
+        return $this->sendRequest("InternetDocument", "save", $props);
+    }
+
+
     /**
      * This method will display the estimated delivery date in the response.
      *
