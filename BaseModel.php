@@ -43,6 +43,9 @@ abstract class BaseModel {
             "calledMethod" => $method,
             "methodProperties" => $properties,
         ];
+//
+//        var_dump($requestData);
+//        exit;
 
         $curl = curl_init($this->apiUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -67,14 +70,15 @@ abstract class BaseModel {
      */
     protected function validateFields($fields, $data) {
         $missingFields = [];
-        $validFields = new \StdClass();
+        $validFields = [];
 
+        if(empty($data)) return new \StdClass();
 
         foreach ($fields as $field => $rule) {
             if ($rule === "required" && (empty($data[$field]) && $data[$field] !== '0')) {
                 $missingFields[] = $field;
             } elseif (isset($data[$field]) && $data[$field] !== '') {
-                $validFields->$field = (string)$data[$field];
+                $validFields[$field] = (string)$data[$field];
             }
         }
 

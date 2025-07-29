@@ -25,7 +25,7 @@ class Common extends BaseModel
      *
      * @return mixed API response.
      */
-    public function getTimeIntervals($data) {
+    public function getTimeIntervals($data = []) {
         $fields = [
             "RecipientCityRef" => "required",
             "DateTime" => "nullable"
@@ -99,7 +99,7 @@ class Common extends BaseModel
      *
      * @return mixed API response.
      */
-    public function getPackList($data) {
+    public function getPackList($data = []) {
         $fields = [
             "Lengthstring" => "nullable",
             "Widthstring" => "nullable",
@@ -137,7 +137,7 @@ class Common extends BaseModel
      *
      * @return mixed API response.
      */
-    public function getCargoDescriptionList($data) {
+    public function getCargoDescriptionList($data = []) {
         $fields = [
             "FindByString" => "nullable",
             "Page" => "nullable",

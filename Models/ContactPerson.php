@@ -13,7 +13,7 @@ class ContactPerson extends BaseModel
      * https://developers.novaposhta.ua/view/model/a39040c4-8512-11ec-8ced-005056b2dbe1/method/a3a25bda-8512-11ec-8ced-005056b2dbe1
      *
      * @param array<string, string> $data Required:
-     * - CounterpartyRef — Counterparty identifier (UUID)
+     * - CounterpartyRef — Counterparty identifier (REF)
      * - FirstName — First name.
      * - LastName — Last name.
      * - MiddleName — Middle name.
@@ -25,8 +25,8 @@ class ContactPerson extends BaseModel
         $fields = array(
             "CounterpartyRef" => "required",
             "FirstName" => "required",
-            "LastName" => "required",
             "MiddleName" => "required",
+            "LastName" => "required",
             "Phone" => "required",
         );
 
@@ -42,8 +42,8 @@ class ContactPerson extends BaseModel
      *  https://developers.novaposhta.ua/view/model/a39040c4-8512-11ec-8ced-005056b2dbe1/method/a3c5a577-8512-11ec-8ced-005056b2dbe1
      *
      * @param array<string, string> $data Required:
-     * - CounterpartyRef — Counterparty identifier (UUID).
-     * - Ref — Contact person counterparty identifier (UUID).
+     * - CounterpartyRef — Counterparty identifier (REF).
+     * - Ref — Contact person counterparty identifier (REF).
      * - FirstName — First name.
      * - LastName — Last name.
      * - MiddleName — Middle name.
@@ -56,8 +56,8 @@ class ContactPerson extends BaseModel
             "CounterpartyRef" => "required",
             "Ref" => "required",
             "FirstName" => "required",
-            "LastName" => "required",
             "MiddleName" => "required",
+            "LastName" => "required",
             "Phone" => "required",
         );
 
@@ -72,7 +72,7 @@ class ContactPerson extends BaseModel
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a39040c4-8512-11ec-8ced-005056b2dbe1/method/a3ea91c8-8512-11ec-8ced-005056b2dbe1
      *
-     * @param string $ref Contact person counterparty identifier (UUID). You can get using NovaPoshta\Models\Counterparty->getCounterpartyContactPersons($ref) method
+     * @param string $ref Contact person counterparty identifier (REF). You can get using NovaPoshta\Models\Counterparty->getCounterpartyContactPersons($ref) method
      * @return mixed API response.
      */
     public function deleteContactPerson($ref){

@@ -95,11 +95,11 @@ class Address extends BaseModel
      * https://developers.novaposhta.ua/view/model/a0cf0f5f-8512-11ec-8ced-005056b2dbe1/method/a27c20d7-8512-11ec-8ced-005056b2dbe1
      *
      * @param string $cityRef City identifier (REF).
-     * @param string $findByString Street name search string.
+     * @param string $findByString Street name search string. Can be null.
      *
      * @return mixed API response.
      */
-    public function getStreet($cityRef, $findByString)
+    public function getStreet($cityRef, $findByString = "")
     {
         if(empty($cityRef)){
             throw new \InvalidArgumentException('Missing required parameter: $cityRef');
@@ -107,15 +107,6 @@ class Address extends BaseModel
 
         if(!is_string($cityRef)){
             throw new \InvalidArgumentException('$cityRef must be a string.');
-        }
-
-
-        if(empty($findByString)){
-            throw new \InvalidArgumentException('Missing required parameter: $findByString');
-        }
-
-        if(!is_string($findByString)){
-            throw new \InvalidArgumentException('$findByString must be a string.');
         }
 
         return $this->sendRequest("Address", "getStreet", ["CityRef" => $cityRef, "FindByString" => $findByString]);
@@ -191,7 +182,7 @@ class Address extends BaseModel
      *
      * @return mixed API response.
      */
-    public function updateCounterpartyAddress($data)
+    public function updateCounterpartyAddress($data = [])
     {
         $fields = [
             "CounterpartyRef" => "nullable",

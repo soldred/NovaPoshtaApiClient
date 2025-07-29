@@ -283,6 +283,6 @@ class Counterparty extends BaseModel {
 
         $methodProperties = $this->validateFields($fields, $data);
 
-        return $this->sendRequest("Counterparty", "getCounterparties", $methodProperties);
+        return $this->sendRequest("CounterpartyGeneral", "getCounterparties", $methodProperties);
     }
 }
