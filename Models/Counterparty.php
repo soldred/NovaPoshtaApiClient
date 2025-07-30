@@ -118,7 +118,8 @@ class Counterparty extends BaseModel {
     }
 
     /**
-     * Get the parameters of the sender's counterparty in terms of the possibility of ordering additional services, from the section: ‘Формування запиту на створення ЕН із додатковими послугами.’ Services can be ordered through a personal manager.
+     * Get the parameters of the sender's counterparty in terms of the possibility of ordering additional services,
+     * from the section: ‘Формування запиту на створення ЕН із додатковими послугами.’ Services can be ordered through a personal manager.
      *
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a28f4b04-8512-11ec-8ced-005056b2dbe1/method/a332efbf-8512-11ec-8ced-005056b2dbe1

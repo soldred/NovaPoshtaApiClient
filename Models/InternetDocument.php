@@ -17,7 +17,7 @@ class InternetDocument extends BaseModel
      * API Reference:
      * https://developers.novaposhta.ua/view/model/a90d323c-8512-11ec-8ced-005056b2dbe1/method/a91f115b-8512-11ec-8ced-005056b2dbe1
      *
-     * @param array<string, string|object|array> $data Required:
+     * @param array<string, mixed> $data Required:
      * - CitySender — Identifier (REF) of the sender's city.
      * - CityRecipient — Identifier (REF) of the recipient's city.
      * - Weight — Actual weight, min - 0.1, measured in kg.
@@ -30,8 +30,8 @@ class InternetDocument extends BaseModel
      * - PackRef — Packaging identifier (REF).
      * - Amount — Integer(string) (reverse delivery amount/number of units)
      * - CargoDetails — Array with cargo details. Should include:
-     * - - CargoDescription — Shipment type identifier (REF), from Common->getCargoTypes(), Common->getTiresWheelsList() etc.
-     * - - Amount — Integer, amount (for example 2 tires)
+     *     - CargoDescription — Shipment type identifier (REF), from Common->getCargoTypes(), Common->getTiresWheelsList() etc.
+     *     - Amount — Integer, amount (for example 2 tires)
      * - CargoDescription — Identifier (REF) of the shipment type, you can get from Common->getCargoDescriptionList()
      *
      * @return mixed API Response
@@ -58,13 +58,72 @@ class InternetDocument extends BaseModel
         return $this->sendRequest("InternetDocument", "getDocumentPrice", $methodProperties);
     }
 
+
+    /**
+     * This method creates a new Express Waybill (EN).
+     *
+     * API Reference:
+     * https://developers.novaposhta.ua/documentation#internetdocument_save
+     *
+     * @param array<string, mixed> $data Required:
+     * - PayerType — Sender or Recipient.
+     * - PaymentMethod — Cash or NonCash.
+     * - CargoType — Documents / Parcel / Cargo (get from Common->getCargoTypes()).
+     * - ServiceType — WarehouseWarehouse / WarehousePostomat (get from Common->getServiceTypes()).
+     * - SeatsAmount — Number of places.
+     * - Description — What is being sent.
+     * - Cost — Declared value.
+     * - CitySender — Ref of sender city.
+     * - Sender — Ref from Counterparty->getCounterparties().
+     * - ContactSender — Ref from Counterparty->getCounterpartyContactPersons().
+     * - SendersPhone — Phone from Counterparty->getCounterpartyContactPersons().
+     * - SenderAddress — Ref of sender warehouse (Address->getWarehouses()).
+     * - CityRecipient — Ref of recipient city.
+     * - Recipient — Ref from Counterparty->getCounterparties().
+     * - ContactRecipient — Ref from Counterparty->getCounterpartyContactPersons().
+     * - RecipientsPhone — Phone from Counterparty->getCounterpartyContactPersons().
+     * Optional:
+     * - RecipientWarehouseIndex — SiteKey for Postomat.
+     * - RecipientAddress — For address delivery.
+     * - Weight — Cargo weight.
+     *
+     * - OptionsSeat — Required if CargoType ≠ "Documents". Used to specify volume and weight of each seat.
+     *   Format:
+     *     [
+     *         [
+     *             "volumetricWidth" => "см",
+     *             "volumetricLength" => "см",
+     *             "volumetricHeight" => "см",
+     *             "weight" => "кг"
+     *         ]
+     *     ]
+     *   Used for accurate calculation of volumetric weight. Must match SeatsAmount.
+     *
+     * - BackwardDeliveryData — Required for COD (cash on delivery).
+     *   Format:
+     *     [
+     *         [
+     *             "PayerType" => "Sender" or "Recipient",
+     *             "CargoType" => "Money",
+     *             "RedeliveryString" => "сума"
+     *         ]
+     *     ]
+     *   Use if recipient pays for goods, and you want the amount returned.
+     *   Can also be auto-generated from BackwardDeliveryAmount.
+     *
+     * - BackwardDeliveryAmount — COD amount (used for auto-generation).
+     * - BackwardDeliveryPayerType — Who pays for return delivery (Sender or Recipient).
+     *
+     * @return mixed API response
+     */
+
     public function createEW($data = [])
     {
         $fields = [
-            "PayerType" => "required", // Sender або Recipient
-            "PaymentMethod" => "required", // Cash або NonCash
-            "CargoType" => "required", // Documents / Parcel / Cargo
-            "ServiceType" => "required", // WarehouseWarehouse / WarehousePostomat
+            "PayerType" => "required",
+            "PaymentMethod" => "required",
+            "CargoType" => "required",
+            "ServiceType" => "required",
             "SeatsAmount" => "required",
             "Description" => "required",
             "Cost" => "required",
@@ -77,11 +136,11 @@ class InternetDocument extends BaseModel
             "Recipient" => "required",
             "ContactRecipient" => "required",
             "RecipientsPhone" => "required",
-            "RecipientWarehouseIndex" => "nullable", // можна не вказувати взагалі, SiteKey
-            "RecipientAddress" => "nullable", // для адресної доставки
-            "Weight" => "nullable", // не обов’язкове, але бажано
-            "BackwardDeliveryAmount" => "nullable", // сума зворотної доставки
-            "BackwardDeliveryPayerType" => "nullable", // Sender / Recipient
+            "RecipientWarehouseIndex" => "nullable",
+            "RecipientAddress" => "nullable",
+            "Weight" => "nullable",
+            "BackwardDeliveryAmount" => "nullable",
+            "BackwardDeliveryPayerType" => "nullable",
             "OptionsSeat" => "nullable",
             "BackwardDeliveryData" => "nullable",
         ];
