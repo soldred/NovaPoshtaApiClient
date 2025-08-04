@@ -73,19 +73,19 @@ class InternetDocument extends BaseModel
      * - SeatsAmount — Number of places.
      * - Description — What is being sent.
      * - Cost — Declared value.
-     * - CitySender — Ref of sender city.
+     * - CitySender — Ref of sender city. get from Address->getCities()
      * - Sender — Ref from Counterparty->getCounterparties().
      * - ContactSender — Ref from Counterparty->getCounterpartyContactPersons().
      * - SendersPhone — Phone from Counterparty->getCounterpartyContactPersons().
      * - SenderAddress — Ref of sender warehouse (Address->getWarehouses()).
-     * - CityRecipient — Ref of recipient city.
+     * - CityRecipient — Ref of recipient city. If private person get from Address->getCities() it not get from Counterparty->getCounterparties()
      * - Recipient — Ref from Counterparty->getCounterparties().
      * - ContactRecipient — Ref from Counterparty->getCounterpartyContactPersons().
      * - RecipientsPhone — Phone from Counterparty->getCounterpartyContactPersons().
      * Optional:
      * - RecipientWarehouseIndex — SiteKey for Postomat.
      * - RecipientAddress — For address delivery.
-     * - Weight — Cargo weight.
+     * - Weight — Cargo weight in kg.
      *
      * - OptionsSeat — Required if CargoType ≠ "Documents". Used to specify volume and weight of each seat.
      *   Format:
@@ -105,7 +105,7 @@ class InternetDocument extends BaseModel
      *         [
      *             "PayerType" => "Sender" or "Recipient",
      *             "CargoType" => "Money",
-     *             "RedeliveryString" => "сума"
+     *             "RedeliveryString" => "3000"
      *         ]
      *     ]
      *   Use if recipient pays for goods, and you want the amount returned.
