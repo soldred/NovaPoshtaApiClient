@@ -1,8 +1,6 @@
 <?php
 namespace NovaPoshta\Models;
 
-use NovaPoshta\BaseModel;
-
 class Counterparty extends BaseModel {
     const TYPE_PRIVATE_PERSON = 'PrivatePerson';
     const TYPE_ORGANIZATION = 'Organization';
@@ -11,47 +9,58 @@ class Counterparty extends BaseModel {
     const PROPERTY_RECIPIENT = 'Recipient';
     const PROPERTY_THIRD_PERSON = 'ThirdPerson';
 
-    const FIELDS_MAP = [
-        self::TYPE_PRIVATE_PERSON => [
-            self::PROPERTY_RECIPIENT => [
-                "FirstName" => "required",
-                "MiddleName" => "required",
-                "LastName" => "required",
-                "Phone" => "required",
-                "Email" => "nullable",
-            ],
-            self::PROPERTY_SENDER => [
-                "FirstName" => "required",
-                "MiddleName" => "required",
-                "LastName" => "required",
-                "Phone" => "required",
-                "Email" => "nullable",
-            ]
-        ],
-        self::TYPE_ORGANIZATION => [
-            self::PROPERTY_RECIPIENT => [
-                "EDRPOU" => "required",
-                "CityRef" => "nullable",
-                "Phone" => "nullable",
-                "Email" => "nullable",
-            ],
-            self::PROPERTY_SENDER => [
-                "EDRPOU" => "required",
-                "CityRef" => "nullable",
-                "Phone" => "nullable",
-                "Email" => "nullable",
-            ],
-            self::PROPERTY_THIRD_PERSON => [
-                "FirstName" => "nullable",
-                "MiddleName" => "nullable",
-                "LastName" => "nullable",
-                "Phone" => "nullable",
-                "Email" => "nullable",
-                "EDRPOU" => "required",
-                "CityRef" => "nullable",
-            ],
-        ],
-    ];
+    // The FIELDS_MAP constant was moved into a static method for PHP 5.4 compatibility.
+
+    /**
+     * Returns the validation rules map for counterparty fields.
+     * This method replaces the FIELDS_MAP constant for PHP 5.4 compatibility.
+     *
+     * @return array
+     */
+    private static function getFieldsMap()
+    {
+        return array(
+            self::TYPE_PRIVATE_PERSON => array(
+                self::PROPERTY_RECIPIENT => array(
+                    "FirstName" => "required",
+                    "MiddleName" => "required",
+                    "LastName" => "required",
+                    "Phone" => "required",
+                    "Email" => "nullable",
+                ),
+                self::PROPERTY_SENDER => array(
+                    "FirstName" => "required",
+                    "MiddleName" => "required",
+                    "LastName" => "required",
+                    "Phone" => "required",
+                    "Email" => "nullable",
+                )
+            ),
+            self::TYPE_ORGANIZATION => array(
+                self::PROPERTY_RECIPIENT => array(
+                    "EDRPOU" => "required",
+                    "CityRef" => "nullable",
+                    "Phone" => "nullable",
+                    "Email" => "nullable",
+                ),
+                self::PROPERTY_SENDER => array(
+                    "EDRPOU" => "required",
+                    "CityRef" => "nullable",
+                    "Phone" => "nullable",
+                    "Email" => "nullable",
+                ),
+                self::PROPERTY_THIRD_PERSON => array(
+                    "FirstName" => "nullable",
+                    "MiddleName" => "nullable",
+                    "LastName" => "nullable",
+                    "Phone" => "nullable",
+                    "Email" => "nullable",
+                    "EDRPOU" => "required",
+                    "CityRef" => "nullable",
+                ),
+            ),
+        );
+    }
 
     /**
      * Creates a new counterparty (Sender, Recipient, or ThirdPerson) for the given type.
@@ -100,15 +109,18 @@ class Counterparty extends BaseModel {
      *
      * @throws \InvalidArgumentException If the $type or $property is invalid.
      *
-     * @see self::FIELDS_MAP For full mapping of fields per type/property.
+     * @see self::getFieldsMap() For full mapping of fields per type/property.
      */
-
     public function createCounterparty($data, $type, $property) {
-        if (!array_key_exists($type, self::FIELDS_MAP) || !array_key_exists($property, self::FIELDS_MAP[$type])) {
+        // Get the fields map from the static method.
+        $fieldsMap = self::getFieldsMap();
+
+        // Check against the local $fieldsMap variable instead of the old constant.
+        if (!array_key_exists($type, $fieldsMap) || !array_key_exists($property, $fieldsMap[$type])) {
             throw new \InvalidArgumentException("Unknown counterparty type ('$type') or property ('$property')");
         }
 
-        $fields = self::FIELDS_MAP[$type][$property];
+        $fields = $fieldsMap[$type][$property];
         $methodProperties = $this->validateFields($fields, $data);
 
         $methodProperties['CounterpartyType'] = $type;
@@ -164,13 +176,12 @@ class Counterparty extends BaseModel {
         }
 
         if(empty($counterpartyProperty)){
-            throw new \InvalidArgumentException('Missing required parameter: $ref. Use self::PROPERTY_ constants');
+            throw new \InvalidArgumentException('Missing required parameter: $counterpartyProperty. Use self::PROPERTY_ constants');
         }
 
         if(!is_string($counterpartyProperty)){
-            throw new \InvalidArgumentException('$ref must be a string. Use self::PROPERTY_ constants');
+            throw new \InvalidArgumentException('$counterpartyProperty must be a string. Use self::PROPERTY_ constants');
         }
-
 
         return $this->sendRequest("Counterparty", "getCounterpartyAddresses", ["Ref" => $ref, "CounterpartyProperty" => $counterpartyProperty]);
     }
@@ -199,7 +210,7 @@ class Counterparty extends BaseModel {
      * - Phone — Phone number (example 380997979789).
      */
     public function updateCounterparty($data) {
-        $fields = [
+        $fields = array(
             "Ref" => "required",
             "CityRef" => "required",
             "FirstName" => "required",
@@ -209,7 +220,7 @@ class Counterparty extends BaseModel {
             "Email" => "required",
             "CounterpartyType" => "required",
             "CounterpartyProperty" => "required",
-        ];
+        );
 
         $methodProperties = $this->validateFields($fields, $data);
 

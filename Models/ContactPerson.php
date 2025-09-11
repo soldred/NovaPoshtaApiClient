@@ -2,8 +2,6 @@
 
 namespace NovaPoshta\Models;
 
-use NovaPoshta\BaseModel;
-
 class ContactPerson extends BaseModel
 {
     /**

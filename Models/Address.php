@@ -1,8 +1,6 @@
 <?php
 namespace NovaPoshta\Models;
 
-use NovaPoshta\BaseModel;
-
 /**
  * Class Address
  *

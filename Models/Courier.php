@@ -2,7 +2,6 @@
 
 namespace NovaPoshta\Models;
 
-use NovaPoshta\BaseModel;
 class Courier extends BaseModel
 {
     /**

@@ -4,11 +4,6 @@ namespace NovaPoshta\Models\PrintedForm;
 
 class InternetDocument extends BasePrintedForm
 {
-    public function __construct($apiKey)
-    {
-        parent::__construct($apiKey);
-    }
-
     /**
      * Generate URL to print InternetDocument (waybill/ЕН).
      *

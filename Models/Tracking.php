@@ -3,7 +3,6 @@
 namespace NovaPoshta\Models;
 
 use http\Exception\InvalidArgumentException;
-use NovaPoshta\BaseModel;
 
 class Tracking extends BaseModel
 {

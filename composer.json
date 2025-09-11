@@ -1,0 +1,28 @@
+{
+  "name": "soldred/novaposhta-api-client",
+  "description": "Simple api client for nova poshta",
+  "keywords": [
+    "nova poshta",
+    "api",
+    "client",
+    "shipping",
+    "delivery",
+    "ukraine"
+  ],
+  "authors": [
+    {
+      "name": "yehor",
+      "email": "yehor.mishchenko13@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "NovaPoshta\\": ""
+    }
+  },
+  "require": {
+    "php": ">=5.4"
+  }
+}

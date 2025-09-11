@@ -1,25 +1,6 @@
 <?php
 namespace NovaPoshta;
 
-require_once __DIR__ . '/BaseModel.php';
-require_once __DIR__ . '/Models/Address.php';
-require_once __DIR__ . '/Models/Common.php';
-require_once __DIR__ . '/Models/ContactPerson.php';
-require_once __DIR__ . '/Models/Counterparty.php';
-require_once __DIR__ . '/Models/Courier.php';
-require_once __DIR__ . '/Models/InternetDocument.php';
-require_once __DIR__ . '/Models/Tracking.php';
-require_once __DIR__ . '/Models/PrintedForm/PrintedForm.php';
-
-use NovaPoshta\Models\Address;
-use NovaPoshta\Models\Common;
-use NovaPoshta\Models\ContactPerson;
-use NovaPoshta\Models\Counterparty;
-use NovaPoshta\Models\Courier;
-use NovaPoshta\Models\InternetDocument;
-use NovaPoshta\Models\PrintedForm\PrintedForm;
-use NovaPoshta\Models\Tracking;
-
 /**
  * NovaPoshta API Client
  *
@@ -27,32 +8,86 @@ use NovaPoshta\Models\Tracking;
  *
  * Official API Documentation  https://developers.novaposhta.ua/documentation
  *
+ * @property-read \NovaPoshta\Models\Address $Address
+ * @property-read \NovaPoshta\Models\Common $Common
+ * @property-read \NovaPoshta\Models\ContactPerson $ContactPerson
+ * @property-read \NovaPoshta\Models\Counterparty $Counterparty
+ * @property-read \NovaPoshta\Models\Courier $Courier
+ * @property-read \NovaPoshta\Models\InternetDocument $InternetDocument
+ * @property-read \NovaPoshta\Models\Tracking $Tracking
+ * @property-read \NovaPoshta\Models\PrintedForm\PrintedForm $PrintedForm
+ * @property-read \NovaPoshta\Models\Registers $Registers
  */
-
-class NovaPoshtaClient {
+class NovaPoshtaApiClient {
     private $apiKey;
     private $apiUrl = "https://api.novaposhta.ua/v2.0/json/";
 
-    public $Address;
-    public $Common;
-    public $ContactPerson;
-    public $Counterparty;
-    public $Courier;
-    public $InternetDocument;
-    public $Tracking;
-    public $PrintedForm;
+    /**
+     * @var array A cache for model instances to avoid creating them multiple times.
+     */
+    private $models = [];
 
     public function __construct($apiKey) {
         $this->apiKey = $apiKey;
+    }
 
-        $this->Address = new Address($apiKey, $this->apiUrl);
-        $this->Common = new Common($apiKey, $this->apiUrl);
-        $this->ContactPerson = new ContactPerson($apiKey, $this->apiUrl);
-        $this->Counterparty = new Counterparty($apiKey, $this->apiUrl);
-        $this->Courier = new Courier($apiKey, $this->apiUrl);
-        $this->InternetDocument = new InternetDocument($apiKey, $this->apiUrl);
-        $this->Tracking = new Tracking($apiKey, $this->apiUrl);
-        $this->PrintedForm = new PrintedForm($apiKey);
+    /**
+     * Magic method to lazy-load API models.
+     * It intelligently decides what to pass to the model's constructor.
+     *
+     * @param string $name The name of the model property (e.g., 'Address').
+     * @return object
+     * @throws \Exception
+     */
+    public function __get($name) {
+        if (isset($this->models[$name])) {
+            return $this->models[$name];
+        }
 
+        $className = 'NovaPoshta\\Models\\' . $name;
+
+        // Handle special case for the PrintedForm container, which is in a subdirectory.
+        if ($name === 'PrintedForm') {
+            $className = 'NovaPoshta\\Models\\PrintedForm\\PrintedForm';
+        }
+
+        if (class_exists($className)) {
+            $modelInstance = null;
+            // Check if the requested model is a special case (for printing).
+            if ($name === 'PrintedForm') {
+                // If so, pass only the API key string to its constructor.
+                $modelInstance = new $className($this->apiKey);
+            } else {
+                // For all regular models, pass the entire client object.
+                $modelInstance = new $className($this);
+            }
+
+            $this->models[$name] = $modelInstance;
+            return $modelInstance;
+        }
+
+        throw new \Exception("Model or property '$name' not found.");
+    }
+
+    /**
+     * Sends a request to the Nova Poshta API.
+     * This is now the central method for all API calls.
+     */
+    public function sendRequest($model, $method, $properties = []) {
+        $requestData = [
+            "apiKey" => $this->apiKey,
+            "modelName" => $model,
+            "calledMethod" => $method,
+            "methodProperties" => empty($properties) ? new \stdClass() : $properties,
+        ];
+        $curl = curl_init($this->apiUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return json_decode($response, true);
     }
 }

@@ -4,11 +4,6 @@ namespace NovaPoshta\Models\PrintedForm;
 
 class Marking extends BasePrintedForm
 {
-    public function __construct($apiKey)
-    {
-        parent::__construct($apiKey);
-    }
-
     /**
      * Generate URL to print marking documents.
      *

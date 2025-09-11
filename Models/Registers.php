@@ -2,8 +2,6 @@
 
 namespace NovaPoshta\Models;
 
-use NovaPoshta\BaseModel;
-
 class Registers extends BaseModel
 {
 
@@ -39,11 +37,11 @@ class Registers extends BaseModel
      * @return mixed API response.
      */
     public function insertDocuments($data){
-        $fields = array([
+        $fields = array(
             "DocumentRefs" => "required",
             "Ref" => "required",
             "Date" => "required",
-        ]);
+        );
 
         if(!is_array($data['DocumentRefs'])){
             throw new \InvalidArgumentException('$data["DocumentRefs"] must be an array');

@@ -2,3 +2,5 @@
 info.txt
 text.txt
 .env
+vendor
+composer.lock
