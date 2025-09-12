@@ -85,7 +85,7 @@ Here is a basic example of how to use the client.
 require_once __DIR__ . '/vendor/autoload.php';
 
 // 2. Use the main client class
-use NovaPoshta\NovaPoshtaApiClient;
+use NovaPoshta\src\NovaPoshtaApiClient;
 
 // 3. Initialize the client with your API key
 $client = new NovaPoshtaApiClient('YOUR_API_KEY');

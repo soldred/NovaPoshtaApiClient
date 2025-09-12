@@ -2,9 +2,8 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use NovaPoshta\NovaPoshtaApiClient;
 use NovaPoshta\Models\Counterparty;
-use NovaPoshta\Models\PrintedForm\PrintedForm;
+use NovaPoshta\NovaPoshtaApiClient;
 
 $apiKey = 'YOUR_API_KEY';
 

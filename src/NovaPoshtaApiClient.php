@@ -48,7 +48,7 @@ class NovaPoshtaApiClient {
 
         // Handle special case for the PrintedForm container, which is in a subdirectory.
         if ($name === 'PrintedForm') {
-            $className = 'NovaPoshta\\Models\\PrintedForm\\PrintedForm';
+            $className = 'NovaPoshta\\src\\Models\\PrintedForm\\PrintedForm';
         }
 
         if (class_exists($className)) {
